@@ -153,7 +153,10 @@ class _ShopFormPageState extends State<ShopFormPage> {
                             CrossAxisAlignment.start,
                         children: [
                           Text('Nama: $_name'),
+                          Text('Harga:$_price'),
+                          Text('Deskripsi:$_description'),
                           // TODO: Munculkan value-value lainnya
+
                         ],
                       ),
                     ),
