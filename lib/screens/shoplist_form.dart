@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_list/screens/menu.dart';
 
 class ShopFormPage extends StatefulWidget {
   const ShopFormPage({Key? key});
@@ -13,13 +17,12 @@ class _ShopFormPageState extends State<ShopFormPage> {
   int _price = 0;
   String _description = "";
 
-  // Function to show the data in a pop-up dialog
   void _showData() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Form Data"),
+          title: const Text("Form Data"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -33,7 +36,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -43,6 +46,8 @@ class _ShopFormPageState extends State<ShopFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -80,7 +85,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -107,7 +111,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -131,7 +134,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   },
                 ),
               ),
-              // ... (add more form fields as needed)
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -140,43 +142,65 @@ class _ShopFormPageState extends State<ShopFormPage> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.indigo),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                                      showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Produk berhasil tersimpan'),
-                    content: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text('Nama: $_name'),
-                          Text('Harga:$_price'),
-                          Text('Deskripsi:$_description'),
-                          // TODO: Munculkan value-value lainnya
-
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-            _formKey.currentState!.reset();
-          },
-          child: const Text(
-              "Save",
-              style: TextStyle(color: Colors.white),
+                        final response = await request.postJson(
+                          "http://<URL_APP_KAMU>/create-flutter/",
+                          jsonEncode(<String, String>{
+                            'name': _name,
+                            'price': _price.toString(),
+                            'description': _description,
+                          }),
+                        );
+                        if (response['status'] == 'success') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Produk baru berhasil disimpan!"),
+                            ),
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Terdapat kesalahan, silakan coba lagi."),
+                            ),
+                          );
+                        }
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Produk berhasil tersimpan'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Nama: $_name'),
+                                    Text('Harga:$_price'),
+                                    Text('Deskripsi:$_description'),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      _formKey.currentState!.reset();
+                    },
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),

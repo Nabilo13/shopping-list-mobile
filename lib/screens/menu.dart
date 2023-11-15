@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/widgets/left_drawer.dart';
 import 'package:shopping_list/widgets/shop_card.dart';
+
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
 
   final List<ShopItem> items = [
-      ShopItem("Lihat Produk", Icons.checklist),
+      ShopItem("Lihat Produk", Icons.checklist,),
       ShopItem("Tambah Produk", Icons.add_shopping_cart),
       ShopItem("Logout", Icons.logout),
   ];
