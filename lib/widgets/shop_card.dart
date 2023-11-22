@@ -43,7 +43,7 @@ class ShopCard extends StatelessWidget {
             );
           } else if (item.name == "Logout") {
             final response = await request.logout(
-              "http://<APP_URL_KAMU>/auth/logout/",
+              "http://nabil-nazir-tutorial.pbp.cs.ui.ac.id//auth/logout/",
             );
             String message = response["message"];
 
@@ -88,3 +88,4 @@ class ShopCard extends StatelessWidget {
     );
   }
 }
+
