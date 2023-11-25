@@ -43,7 +43,7 @@ class ShopCard extends StatelessWidget {
             );
           } else if (item.name == "Logout") {
             final response = await request.logout(
-              "http://nabil-nazir-tutorial.pbp.cs.ui.ac.id//auth/logout/",
+              "https://nabil-nazir-tutorial.pbp.cs.ui.ac.id/auth/logout/",
             );
             String message = response["message"];
 
