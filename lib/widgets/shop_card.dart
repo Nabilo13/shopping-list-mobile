@@ -14,13 +14,11 @@ class ShopItem {
 
 class ShopCard extends StatelessWidget {
   final ShopItem item;
-
   const ShopCard(this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-
     return Material(
       color: Colors.indigo,
       child: InkWell(
@@ -43,8 +41,7 @@ class ShopCard extends StatelessWidget {
             );
           } else if (item.name == "Logout") {
             final response = await request.logout(
-              "https://nabil-nazir-tutorial.pbp.cs.ui.ac.id/auth/logout/",
-            );
+              "https://nabil-nazir-tutorial.pbp.cs.ui.ac.id/auth/logout/");
             String message = response["message"];
 
             if (response['status']) {
